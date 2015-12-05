@@ -1,0 +1,19 @@
+{
+  "name": "raspi-lights",
+  "version": "1.0.0",
+  "description": "Control lights over the internet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pohy/lights.git"
+  },
+  "author": "David Pohan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pohy/lights/issues"
+  },
+  "homepage": "https://github.com/pohy/lights#readme"
+}
