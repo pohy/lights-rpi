@@ -6,15 +6,22 @@
 	<body>
 		<button onclick="javascript:toggleLed()">Toggle LED</button>
 		<button onclick="javascript:toggleBlinking()">Toggle blinking</button>
+		<input type="number" id="blinkDelay"/>
 		<p>LED is <span id="ledStatus">unknown</span></p>
 		<p>Blinking is <span id="blinkingStatus">unknown</span></p>
 	</body>
 	<script type="text/javascript">
 		var status = {};
-		const updateDelay = 250;
+		var updateDelay = 1000;
+
+		var blinkDelayElement;
 
 		window.onload = function() {
+			blinkDelayElement = document.getElementById('blinkDelay');
+			console.log(blinkDelayElement);
+
 			loadStatus();
+			blinkDelayElement.oninput = changeDelay;
 		}
 
 		const updateInterval = setInterval(loadStatus, updateDelay);
@@ -25,6 +32,11 @@
 
 		function toggleBlinking() {
 			get('/toggle/blink', updateStatuses);
+		}
+
+		function changeDelay(e) {
+			var delay = e.srcElement.value;
+			post(`/interval/${delay}`, updateStatuses);
 		}
 
 		function loadStatus() {
@@ -41,10 +53,27 @@
 			if(typeof blinkingStatus !== 'undefined') {
 				document.getElementById('blinkingStatus').innerHTML = statusString(blinkingStatus);
 			}
+
+			var blinkDelay = status.blinkDelay;
+			if(typeof blinkDelay !== 'undefined') {
+				blinkDelayElement.value = blinkDelay;
+			}
 		}
 
 		function get(url, cb) {
-			fetch(url)
+			request(url, 'GET', cb);
+		}
+
+		function post(url, cb) {
+			request(url, 'POST', cb);
+		}
+
+		function request(url, type, cb) {
+			var options = {
+				method: type
+			};
+
+			fetch(url, options)
 				.then(function(res) {
 					res.json().then(function(res) {
 						cb(res);

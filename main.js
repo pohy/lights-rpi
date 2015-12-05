@@ -6,7 +6,7 @@ const app = express();
 const led = new Gpio(21, 'out');
 const button = new Gpio(20, 'in', 'both');
 
-const BLINK_DELAY = 250;
+let blinkDelay = 250;
 
 let ledState = false;
 let blinking = false;
@@ -41,8 +41,16 @@ app.get('/toggle/:what', (req, res) => {
 	}
 });
 
+app.post('/interval/:value', (req, res) => {
+	const {value} = req.params;
+	blinkDelay = Math.abs(value);
+	toggleBlinking();
+	toggleBlinking();
+	res.send({delay: blinkDelay});
+});
+
 app.get('/status', (req, res) => {
-	res.send({ledState, blinking});
+	res.send({ledState, blinking, blinkDelay});
 });
 
 const server = app.listen(3000, () => {
@@ -59,7 +67,7 @@ let blinkingInterval;
 function toggleBlinking() {
 	blinking = !blinking;
 	if (blinking) {
-		blinkingInterval = setInterval(toggleLed, BLINK_DELAY);
+		blinkingInterval = setInterval(toggleLed, blinkDelay);
 	} else {
 		clearInterval(blinkingInterval);
 	}
