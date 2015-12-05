@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Toggle dem lights</title>
+	</head>
+	<body>
+		<button onclick="javascript:toggleLed()">Toggle LED</button>
+		<button onclick="javascript:toggleBlinking()">Toggle blinking</button>
+		<p>LED is <span id="ledStatus">unknown</span></p>
+		<p>Blinking is <span id="blinkingStatus">unknown</span></p>
+	</body>
+	<script type="text/javascript">
+		var status = {};
+		const updateDelay = 250;
+
+		window.onload = function() {
+			loadStatus();
+		}
+
+		const updateInterval = setInterval(loadStatus, updateDelay);
+
+		function toggleLed() {
+			get('/toggle/led', updateStatuses);
+		}
+
+		function toggleBlinking() {
+			get('/toggle/blink', updateStatuses);
+		}
+
+		function loadStatus() {
+			get('/status', updateStatuses);
+		}
+
+		function updateStatuses(status) {
+			var ledStatus = status.ledState;
+			if(typeof ledStatus !== 'undefined') {
+				document.getElementById('ledStatus').innerHTML = statusString(ledStatus);
+			}
+
+			var blinkingStatus = status.blinking;
+			if(typeof blinkingStatus !== 'undefined') {
+				document.getElementById('blinkingStatus').innerHTML = statusString(blinkingStatus);
+			}
+		}
+
+		function get(url, cb) {
+			fetch(url)
+				.then(function(res) {
+					res.json().then(function(res) {
+						cb(res);
+					})
+				})
+		}
+
+		function statusString(value) {
+			return value ? 'on' : 'off';
+		}
+	</script>
+</html>

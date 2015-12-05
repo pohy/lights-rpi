@@ -11,6 +11,17 @@ const BLINK_DELAY = 250;
 let ledState = false;
 let blinking = false;
 
+app.get('/', (req, res) => {
+	const options = {
+		root: `${__dirname}/`,
+		dotfiles: 'deny',
+		headers: {
+			'X-Clacks-Overhead': 'GNU Terry Pratchett'
+		}
+	};
+	res.sendFile('index.html', options);
+});
+
 app.get('/toggle/:what', (req, res) => {
 	const {what} = req.params;
 	switch(what) {
