@@ -2,10 +2,11 @@
 <html>
 	<head>
 		<title>Toggle dem lights</title>
+		<link rel="stylesheet" href="style.css"/>
 	</head>
 	<body>
-		<button onclick="javascript:toggleLed()">Toggle LED</button>
-		<button onclick="javascript:toggleBlinking()">Toggle blinking</button>
+		<button id="ledButton" onclick="javascript:toggleLed()">Toggle LED</button>
+		<button id="blinkButton" onclick="javascript:toggleBlinking()">Toggle blinking</button>
 		<input type="number" id="blinkDelay"/>
 		<p>LED is <span id="ledStatus">unknown</span></p>
 		<p>Blinking is <span id="blinkingStatus">unknown</span></p>
@@ -47,11 +48,24 @@
 			var ledStatus = status.ledState;
 			if(typeof ledStatus !== 'undefined') {
 				document.getElementById('ledStatus').innerHTML = statusString(ledStatus);
+				document.getElementById('ledButton').classList.toggle('on');
+				const ledButton = document.getElementById('ledButton');
+				if(ledStatus) {
+					ledButton.classList.add('on');
+				} else {
+					ledButton.classList.remove('on');
+				}
 			}
 
 			var blinkingStatus = status.blinking;
 			if(typeof blinkingStatus !== 'undefined') {
 				document.getElementById('blinkingStatus').innerHTML = statusString(blinkingStatus);
+				const blinkButton = document.getElementById('blinkButton');
+				if(blinkingStatus) {
+					blinkButton.classList.add('on');
+				} else {
+					blinkButton.classList.remove('on');
+				}
 			}
 
 			var blinkDelay = status.blinkDelay;

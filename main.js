@@ -11,6 +11,8 @@ let blinkDelay = 250;
 let ledState = false;
 let blinking = false;
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
 	const options = {
 		root: `${__dirname}/`,
